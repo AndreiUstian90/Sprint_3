@@ -1,30 +1,24 @@
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import ru.yandex.praktikum.scooter.api.SendGetRequest;
-import ru.yandex.praktikum.scooter.api.model.OrderCredentials;
-
-import java.util.List;
-
-import static org.hamcrest.Matchers.notNullValue;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.*;
+import ru.yandex.praktikum.scooter.api.OrdersClient;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestOrderList {
 
-    private SendGetRequest sendGetRequest;
+    private OrdersClient ordersClient;
 
     @BeforeAll
     public void setUp() {
-        SendGetRequest sendPostRequest = new SendGetRequest();
+        ordersClient = new OrdersClient();
     }
 
     @Test
     @DisplayName("Check status code of getting order's list")
-    public void getOrderList() {
-        List<OrderCredentials> orders = SendGetRequest.OrderList();
-        MatcherAssert.assertThat(orders, notNullValue());
+    public void getOrderList1() {
+        Response response = OrdersClient.OrderList();
+        System.out.println(response);
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertNotNull(response.jsonPath().getList("orders"));
     }
 
 }
